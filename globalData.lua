@@ -4,12 +4,13 @@ local M = {}
 
 -- Font overall
 M.font = {
-	default = native.systemFont,
-	defaultBold = native.systemFontBold,
+	default = "InknutAntiqua-Light.ttf",
+	defaultBold = "InknutAntiqua-ExtraBold.ttf",
 	size = {
-		normal = display.contentHeight * 0.05,
-		large = display.contentHeight * 0.075,
-		small = display.contentHeight * 0.025,
+		normal = display.contentHeight * 0.03,
+		large = display.contentHeight * 0.05,
+		xlarge = display.contentHeight * 0.075,
+		small = display.contentHeight * 0.01,
 	},
 }
 
@@ -42,4 +43,20 @@ M.fade = {
 	effect = "fade",
     time = 500
 }
+
+M.sound = {
+	bravo = audio.loadSound("audio/applause.wav"),
+}
+M.bgm = audio.loadStream("audio/bgm.wav")
+M.bgmChannel = 1
+M.nobgm = false
+M.soundiconsSheet = "img/volume.png"
+M.soundiconsOptions = {
+	width = 200,
+	height = 200,
+	numFrames = 2
+}
+
+M.reshuffle = "img/refresh.png"
+
 return M

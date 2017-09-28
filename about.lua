@@ -21,7 +21,7 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    local title = display.newText(sceneGroup, "17-Puzzle", display.contentCenterX, display.contentHeight * 0.1, globalData.font.defaultBold, globalData.font.size.large)
+    local title = display.newText(sceneGroup, "17-Puzzle", display.contentCenterX, display.contentHeight * 0.1, globalData.font.defaultBold, globalData.font.size.xlarge)
     title:setFillColor(0, 0, 1)
 
     local title = display.newText({
@@ -31,7 +31,7 @@ function scene:create( event )
         y = display.contentCenterY,
         width = display.contentWidth * 0.8,
         font = globalData.font.default,
-        fontSize = globalData.font.size.small,
+        fontSize = globalData.font.size.normal,
         align = "center"
     })
     title:setFillColor(0, 0, 1)

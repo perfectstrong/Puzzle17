@@ -35,11 +35,11 @@ function scene:create( event )
     giftsGroup = display.newGroup()
     sceneGroup:insert(giftsGroup)
 
-    local titlePicture = display.newText(giftsGroup, "Choose a gift", display.contentCenterX, display.contentHeight * 0.1, globalData.font.default, globalData.font.size.normal)
+    local titlePicture = display.newText(giftsGroup, "Choose a gift", display.contentCenterX, display.contentHeight * 0.1, globalData.font.default, globalData.font.size.large)
     titlePicture:setFillColor(0, 0, 1)
     giftsGroup:insert(titlePicture)
 
-    local indication = display.newText(giftsGroup, "Swipe left or right to view all", display.contentCenterX, display.contentHeight * 0.15, globalData.font.default, globalData.font.size.small)
+    local indication = display.newText(giftsGroup, "Swipe left or right to view all", display.contentCenterX, display.contentHeight * 0.15, globalData.font.default, globalData.font.size.normal)
     indication:setFillColor(1, 0, 1)
     giftsGroup:insert(indication)
 
@@ -49,7 +49,7 @@ function scene:create( event )
         x = display.contentCenterX, 
         y = display.contentHeight * 0.4, 
         font = globalData.font.default,
-        fontSize = globalData.font.size.small,
+        fontSize = globalData.font.size.normal,
         width = display.contentWidth * 0.8,
         align = "center"
     })
@@ -126,14 +126,14 @@ function scene:create( event )
     levelsGroup = display.newGroup()
     sceneGroup:insert(levelsGroup)
 
-    local titleLevel = display.newText(levelsGroup, "Choose a level", display.contentCenterX, display.contentHeight * 0.5, globalData.font.default, globalData.font.size.normal)
+    local titleLevel = display.newText(levelsGroup, "Choose a level", display.contentCenterX, display.contentHeight * 0.5, globalData.font.default, globalData.font.size.large)
     titleLevel:setFillColor(0, 0, 1)
     levelsGroup:insert(titleLevel)
 
     local rowNumControler = display.newGroup()
     levelsGroup:insert(rowNumControler)
 
-    local rowNumTitle = display.newText(rowNumControler, "The number of rows: " .. globalData.gameSetting.rowNum, display.contentCenterX, display.contentHeight * 0.55, globalData.font.default, globalData.font.size.small)
+    local rowNumTitle = display.newText(rowNumControler, "The number of rows: " .. globalData.gameSetting.rowNum, display.contentCenterX, display.contentHeight * 0.55, globalData.font.default, globalData.font.size.normal)
     rowNumTitle:setFillColor(0, 0, 1)
 
     local rowNumSlider = widget.newSlider({
@@ -156,7 +156,7 @@ function scene:create( event )
     local colNumControler = display.newGroup()
     levelsGroup:insert(colNumControler)
 
-    local colNumTitle = display.newText(colNumControler, "The number of columns: " .. globalData.gameSetting.colNum, display.contentCenterX, display.contentHeight * 0.70, globalData.font.default, globalData.font.size.small)
+    local colNumTitle = display.newText(colNumControler, "The number of columns: " .. globalData.gameSetting.colNum, display.contentCenterX, display.contentHeight * 0.70, globalData.font.default, globalData.font.size.normal)
     colNumTitle:setFillColor(0, 0, 1)
 
     local colNumSlider = widget.newSlider({
@@ -196,7 +196,7 @@ function scene:create( event )
     startButton:addEventListener("tap",
         function (  )
             if (globalData.gameSetting.imagePath == nil) then
-                choice.text = "Please choose a gift.\nOtherwise you cannot start the game."
+                choice.text = "No gift no fun."
                 return
             end
             composer.gotoScene("mainGame", globalData.fade)

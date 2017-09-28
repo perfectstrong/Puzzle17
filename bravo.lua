@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local globalData = require("globalData")
-local widget = require("widget") 
+local widget = require("widget")
 local scene = composer.newScene()
  
 -- -----------------------------------------------------------------------------------
@@ -8,7 +8,8 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
  
-math.randomseed(os.time())
+ 
+ 
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -20,57 +21,71 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    local title = display.newText(sceneGroup, "17-Puzzle", display.contentCenterX, display.contentHeight * 0.3, globalData.font.defaultBold, globalData.font.size.xlarge)
-    title:setFillColor(0, 0, 1)
+    local transparentFilm = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight)
+    transparentFilm:setFillColor(0,0,0,0.5)
 
-    local playButton = widget.newButton({
-        -- Button to return to main menu
-        -- Check if want to leave while the puzzle is still not solved
-        x = display.contentCenterX,
-        y = display.contentHeight * 0.7,
-        label = "Play",
+    local box = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth * 0.9, display.contentHeight * 0.8)
+    box:setFillColor(0,0,0,0.5)
+    box.strokeWidth = 3
+    box:setStrokeColor(1, 0, 0)
+
+    local text = display.newText({
+        parent = sceneGroup,
+        text = "You have solved the puzzle in:\n"
+            ..composer.getVariable("numMoves")
+            .."\nmoves.\n"
+            .."!! INCREDIBLE !!",
+        x = box.x,
+        y = box.y - box.height / 5,
+        width = box.width * 0.8,
+        font = globalData.font.default,
+        fontSize = globalData.font.size.normal,
+        align = "center",
+    })
+
+    local reviewButton = widget.newButton({
+        -- Button to resume game
+        x = box.x,
+        y = box.y + box.height * 0.2,
+        label = "Review",
         labelAlign = "center",
         labelColor = globalData.labelColor,
         font = globalData.font.default,
         fontSize = globalData.font.size.normal,
-        emboss = true,
         shape = "rect",
         fillColor = globalData.buttonColor,
-        width = display.contentWidth * 0.4,
+        width = box.width * 0.4,
         height = display.contentHeight * 0.1,
     })
-    sceneGroup:insert(playButton)
+    sceneGroup:insert(reviewButton)
+    reviewButton:addEventListener("tap",
+        function (  )
+            -- Function to resume to the current game
+            composer.hideOverlay("fade", 400)
+        end
+    )
 
-    local aboutButton = widget.newButton({
-        -- Button to return to main menu
-        -- Check if want to leave while the puzzle is still not solved
-        x = display.contentCenterX,
-        y = display.contentHeight * 0.85,
-        label = "About",
+    local homeButton = widget.newButton({
+        -- Button to resume game
+        x = box.x,
+        y = box.y + box.height * 0.4,
+        label = "Home",
         labelAlign = "center",
         labelColor = globalData.labelColor,
         font = globalData.font.default,
         fontSize = globalData.font.size.normal,
-        emboss = true,
         shape = "rect",
         fillColor = globalData.buttonColor,
-        width = display.contentWidth * 0.4,
+        width = box.width * 0.4,
         height = display.contentHeight * 0.1,
     })
-    sceneGroup:insert(aboutButton)
-
-    playButton:addEventListener("tap", 
-        function ()
-            composer.gotoScene("chooseLevel", globalData.fade)
+    sceneGroup:insert(homeButton)
+    homeButton:addEventListener("tap",
+        function (  )
+            -- Function to resume to the current game
+            composer.gotoScene("mainMenu", globalData.fade)
         end
     )
-
-    aboutButton:addEventListener("tap",
-        function ()
-            composer.gotoScene("about", globalData.fade)
-        end
-    )
-
 end
  
  
@@ -85,7 +100,7 @@ function scene:show( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
+        audio.play(globalData.sound.bravo)
     end
 end
  

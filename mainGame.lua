@@ -21,6 +21,7 @@ local tiles, nilTile
 local colNum, rowNum, hLength, vLength, w, h, scale -- w and h are scaled width and height of a tile
 local moveCount, moveText, congratsText
 local solved
+local sound, nosound, soundSheet
 
 -----------------------------------------------------------------------------------------
 -- Useful functions
@@ -114,8 +115,13 @@ function verifyTiles()
         end
     end
     -- If true, then we show congrats text
-    congratsText.isVisible = true
     solved = true
+    composer.setVariable("numMoves", moveCount)
+    composer.showOverlay("bravo", {
+        effect = "fade",
+        time = 500,
+        isModal = true
+    })
 end
 
 -- Generate a solvable shuffle of numbers from numTiles first positive integers
@@ -165,7 +171,6 @@ function shuffleTiles()
     local x = shuffleOrder(rowNum * colNum)
     -- Apply shuffling for tiles
     local newTiles = {}
-    newTiles[0] = nilTile
     for i = 1, #x do
         local thisTile = tiles[x[i]]
         newTiles[i] = thisTile
@@ -179,6 +184,19 @@ function shuffleTiles()
     end
 
     tiles = newTiles
+end
+
+-- Setup the nil tile
+function setupNilTile( ... )
+    if (nilTile ~= nil) then 
+        nilTile:removeSelf()
+    end
+    nilTile = display.newRect(tilesDisplay, tilesCenter.x - ((colNum - 1)/2) * w, tilesCenter.y - ((rowNum + 1) / 2) * h, w, h)
+    nilTile.i = 0
+    nilTile.j = 1
+    nilTile.trueOrder = 0
+    nilTile:setFillColor(0.5)
+    tiles[0] = nilTile
 end
 
 -- Setup the tiles
@@ -199,6 +217,7 @@ end
 
 -- Setup shuffled image
 function updateImage()
+
     for i = 1, #tiles do
         local tile = tiles[i]
         tile.x = tilesCenter.x - ((colNum + 1) / 2 - tile.j) * w
@@ -216,6 +235,25 @@ function checkQuit( )
             time = 500,
             isModal = true
         })
+    end
+end
+
+-- Turn sound on or off
+function toggleSound( )
+    if (globalData.nobgm) then
+        globalData.nobgm = false
+    else
+        globalData.nobgm = true
+    end
+    -- Toggle sound and icon
+    if (globalData.nobgm) then
+        sound.isVisible = false
+        noSound.isVisible = true
+        audio.stop(globalData.bgmChannel)
+    else
+        sound.isVisible = true
+        noSound.isVisible = false
+        audio.play(globalData.bgm, { channel = globalData.bgmChannel, loops = - 1, fadein = 1000})        
     end
 end
 
@@ -251,9 +289,6 @@ function scene:create( event )
     moveCount = 0
     moveText = display.newText(counterGroup, moveCount, display.contentCenterX, display.contentHeight * 0.1, globalData.font.default, globalData.font.size.large)
     moveText:setFillColor(0, 0, 1)
-    congratsText = display.newText(counterGroup, "Bravo", display.contentCenterX, display.contentHeight  * 0.8, globalData.font.defaultBold, globalData.font.size.large)
-    congratsText:setFillColor(0, 0, 1)
-    congratsText.isVisible = false
 
     -- Load the image in pieces
     sheetOptions = {
@@ -266,13 +301,6 @@ function scene:create( event )
     objectSheet = graphics.newImageSheet(globalData.gameSetting.imagePath, system.TemporaryDirectory, sheetOptions)
 
     tiles = {}
-
-    nilTile = display.newRect(tilesDisplay, tilesCenter.x - ((colNum - 1)/2) * w, tilesCenter.y - ((rowNum + 1) / 2) * h, w, h)
-    nilTile.i = 0
-    nilTile.j = 1
-    nilTile.trueOrder = 0
-    nilTile:setFillColor(0.5)
-    tiles[0] = nilTile
 
     -- Prepare buttons
     navigationGroup = display.newGroup()
@@ -323,11 +351,44 @@ function scene:create( event )
         end
     )
 
+    -- Load the icons for sound/no sound
+    soundSheet = graphics.newImageSheet(globalData.soundiconsSheet, globalData.soundiconsOptions)
+    local wIcon = math.min(display.contentHeight * 0.2, display.contentWidth * 0.2)
+    sound = display.newImageRect(navigationGroup, soundSheet, 1, wIcon, wIcon)
+    sound.x = display.contentWidth * 0.7
+    sound.y = display.contentHeight * 0.1
+    sound.isVisible = true
+    noSound = display.newImageRect(navigationGroup, soundSheet, 2, wIcon, wIcon)
+    noSound.x = display.contentWidth * 0.7
+    noSound.y = display.contentHeight * 0.1
+    noSound.isVisible = false
+    if (globalData.nobgm) then
+        toggleSound()
+    end
+    sound:addEventListener("tap", toggleSound)
+    noSound:addEventListener("tap", toggleSound)
+
     -- Save the original image into global data
     globalData.hint = {
         width = hLength,
         height = vLength,
     }
+
+    -- icon for reshuffling
+    local reshuffle = display.newImageRect(navigationGroup, globalData.reshuffle, wIcon, wIcon)
+    reshuffle.x = display.contentWidth * 0.9
+    reshuffle.y = display.contentHeight * 0.1
+    reshuffle.isVisible = true
+    reshuffle:addEventListener("tap",
+        function (  )
+            shuffleTiles()
+            solved = false
+            moveCount = 0
+            moveText.text = moveCount
+            setupNilTile()
+            updateImage()
+        end
+    )
 end
  
  
@@ -341,8 +402,8 @@ function scene:show( event )
         -- Code here runs when the scene is still off screen (but is about to come on screen)
         initializeTiles()
         shuffleTiles()
+        setupNilTile()
         solved = false
-        Quit = false
         updateImage()
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

@@ -38,7 +38,7 @@ function scene:create( event )
         width = box.width * 0.8,
         height = box.height * 0.5,
         font = globalData.font.default,
-        fontSize = globalData.font.size.small,
+        fontSize = globalData.font.size.normal,
         align = "center",
     })
 
