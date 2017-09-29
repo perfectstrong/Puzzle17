@@ -20,7 +20,6 @@ M.gamePreconfig = {
 	rightPadding = display.contentWidth * 0.1,
 	topPadding = display.contentHeight * 0.2,
 	bottomPadding = display.contentHeight * 0.2,
-	background = "img/background.png",
 
 }
 
@@ -36,18 +35,15 @@ M.gameSetting = {
 	colNumMax = 10,
 }
 
-M.labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } }
-M.buttonColor = { default={ 1, 0.2, 0.5, 0.7 }, over={ 1, 0.2, 0.5, 1 } }
-
 M.fade = {
 	effect = "fade",
     time = 500
 }
 
 M.sound = {
-	bravo = audio.loadSound("audio/applause.wav"),
+	bravo = audio.loadSound("audio/applause.mp3"),
 }
-M.bgm = audio.loadStream("audio/bgm.wav")
+M.bgm = audio.loadStream("audio/bgm.mp3")
 M.bgmChannel = 1
 M.nobgm = false
 M.soundiconsSheet = "img/volume.png"
@@ -58,5 +54,25 @@ M.soundiconsOptions = {
 }
 
 M.reshuffle = "img/refresh.png"
+
+M.background = "img/background.png"
+M.backgroundColor =  {178/255, 45/255, 126/255, 1.0}
+M.defaultColor = {
+	normalText = {2/255, 195/255, 154/255},
+	title = {5/255, 102/255, 141/255},
+	h2 =   {2/255, 128/255, 144/255},
+	indicativeText = {0, 168/255, 150/255},
+	gray = {0, 0, 0, 0.5},
+	black = {0, 0, 0, 1},
+	stroke = {1, 0, 0}
+}
+M.labelColor = {
+	default = {2/255, 195/255, 154/255, 1.0},
+	over = {247/255, 142/255, 105/255, 1.0}
+}
+M.buttonColor = {
+	default = {240/255, 243/255, 189/255, 1.0},
+	over = {240/255, 243/255, 189/255, 0.7}
+}
 
 return M

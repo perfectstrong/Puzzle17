@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local globalData = require("globalData")
+local color = globalData.defaultColor
 local widget = require("widget")
 local scene = composer.newScene()
  
@@ -195,7 +196,7 @@ function setupNilTile( ... )
     nilTile.i = 0
     nilTile.j = 1
     nilTile.trueOrder = 0
-    nilTile:setFillColor(0.5)
+    nilTile:setFillColor(unpack(color.gray))
     tiles[0] = nilTile
 end
 
@@ -267,10 +268,6 @@ function scene:create( event )
     local sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
-    background = display.newImageRect(sceneGroup, globalData.gamePreconfig.background, display.contentWidth, display.contentHeight)
-    background.x = display.contentCenterX
-    background.y = display.contentCenterY
-
     tilesDisplay = display.newGroup()
     sceneGroup:insert(tilesDisplay)
 
@@ -288,7 +285,7 @@ function scene:create( event )
     sceneGroup:insert(counterGroup)
     moveCount = 0
     moveText = display.newText(counterGroup, moveCount, display.contentCenterX, display.contentHeight * 0.1, globalData.font.default, globalData.font.size.large)
-    moveText:setFillColor(0, 0, 1)
+    moveText:setFillColor(unpack(color.title))
 
     -- Load the image in pieces
     sheetOptions = {

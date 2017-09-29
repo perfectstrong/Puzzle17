@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local globalData = require("globalData")
+local color = globalData.defaultColor
 local widget = require("widget") 
 local scene = composer.newScene()
  
@@ -21,7 +22,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     local title = display.newText(sceneGroup, "17-Puzzle", display.contentCenterX, display.contentHeight * 0.3, globalData.font.defaultBold, globalData.font.size.xlarge)
-    title:setFillColor(0, 0, 1)
+    title:setFillColor(unpack(color.title))
 
     local playButton = widget.newButton({
         -- Button to return to main menu

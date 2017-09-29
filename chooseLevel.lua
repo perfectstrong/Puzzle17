@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local globalData = require("globalData")
+local color = globalData.defaultColor
 local widget = require("widget")
 
 local scene = composer.newScene()
@@ -26,21 +27,16 @@ function scene:create( event )
     backGroup = display.newGroup()
     sceneGroup:insert(backGroup)
 
-    local background = display.newImageRect(backGroup, "img/background.png", display.contentWidth, display.contentHeight)
-    background.x = display.contentCenterX
-    background.y = display.contentCenterY
-
-
     -- ImageGifts
     giftsGroup = display.newGroup()
     sceneGroup:insert(giftsGroup)
 
     local titlePicture = display.newText(giftsGroup, "Choose a gift", display.contentCenterX, display.contentHeight * 0.1, globalData.font.default, globalData.font.size.large)
-    titlePicture:setFillColor(0, 0, 1)
+    titlePicture:setFillColor(unpack(color.h2))
     giftsGroup:insert(titlePicture)
 
     local indication = display.newText(giftsGroup, "Swipe left or right to view all", display.contentCenterX, display.contentHeight * 0.15, globalData.font.default, globalData.font.size.normal)
-    indication:setFillColor(1, 0, 1)
+    indication:setFillColor(unpack(color.indicativeText))
     giftsGroup:insert(indication)
 
     local choice = display.newText({
@@ -53,7 +49,7 @@ function scene:create( event )
         width = display.contentWidth * 0.8,
         align = "center"
     })
-    choice:setFillColor(1, 0, 1)
+    choice:setFillColor(unpack(color.indicativeText))
     giftsGroup:insert(choice)
 
     local gifts = {} -- Caching all gifts
@@ -79,7 +75,7 @@ function scene:create( event )
     function deselectAll()
         -- Deselect all other choices in scrollView
         for _,child in pairs(gifts) do
-            child:setFillColor(0, 1, 1)
+            child:setFillColor(unpack(color.title))
             child.font = globalData.font.default
             choice.text = "You have not chosen a gift."
         end
@@ -87,7 +83,7 @@ function scene:create( event )
 
     function setGift( g )
         -- Set highlight the choice
-        g:setFillColor(1, 0, 0)
+        g:setFillColor(unpack(color.normalText))
         g.font = globalData.font.defaultBold
         choice.text = "You have chosen the gift no. " .. g.text .. "."
         setImageToPlay(g.target)
@@ -108,7 +104,7 @@ function scene:create( event )
             local child = gifts[i]
             child.x = scrollView.width / 2 - ((scrollView.numChildren + 1) / 2  - i) * scrollView.height
         end
-        g:setFillColor(0, 1, 1)
+        g:setFillColor(unpack(color.title))
         g:addEventListener("tap", function ()
                 deselectAll()
                 setGift(g)
@@ -127,16 +123,41 @@ function scene:create( event )
     sceneGroup:insert(levelsGroup)
 
     local titleLevel = display.newText(levelsGroup, "Choose a level", display.contentCenterX, display.contentHeight * 0.5, globalData.font.default, globalData.font.size.large)
-    titleLevel:setFillColor(0, 0, 1)
+    titleLevel:setFillColor(unpack(color.h2))
     levelsGroup:insert(titleLevel)
 
     local rowNumControler = display.newGroup()
     levelsGroup:insert(rowNumControler)
 
     local rowNumTitle = display.newText(rowNumControler, "The number of rows: " .. globalData.gameSetting.rowNum, display.contentCenterX, display.contentHeight * 0.55, globalData.font.default, globalData.font.size.normal)
-    rowNumTitle:setFillColor(0, 0, 1)
+    rowNumTitle:setFillColor(unpack(color.h2))
+
+    local options = {
+        frames = {
+            { x=0, y=0, width=40, height=64 },
+            { x=40, y=0, width=40, height=64 },
+            { x=80, y=0, width=40, height=64 },
+            { x=120, y=0, width=36, height=64 },
+            { x=156, y=0, width=64, height=64 }
+        },
+        sheetContentWidth = 220,
+        sheetContentHeight = 64
+    }
+    local sliderSheet = graphics.newImageSheet( "img/widget-slider.png", options )
+
+    local frameSize = math.min(display.contentWidth, display.contentHeight) * 0.05
 
     local rowNumSlider = widget.newSlider({
+        sheet = sliderSheet,
+        leftFrame = 1,
+        middleFrame = 2,
+        rightFrame = 3,
+        fillFrame = 4,
+        frameWidth = frameSize,
+        frameHeight = frameSize,
+        handleFrame = 5,
+        handleWidth = frameSize * 1.5,
+        handleHeight = frameSize * 1.5,
         x = display.contentCenterX,
         y = display.contentHeight * 0.6,
         width = display.contentWidth * 0.6,
@@ -149,17 +170,29 @@ function scene:create( event )
     })
     rowNumControler:insert(rowNumSlider)
 
-    display.newText(rowNumControler, globalData.gameSetting.rowNumMin, display.contentWidth * 0.10, rowNumSlider.y, globalData.font.default, globalData.font.size.normal)
-    display.newText(rowNumControler, globalData.gameSetting.rowNumMax, display.contentWidth * 0.90, rowNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    local x = display.newText(rowNumControler, globalData.gameSetting.rowNumMin, display.contentWidth * 0.10, rowNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    x:setFillColor(unpack(color.title))
+    local x = display.newText(rowNumControler, globalData.gameSetting.rowNumMax, display.contentWidth * 0.90, rowNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    x:setFillColor(unpack(color.title))
 
 
     local colNumControler = display.newGroup()
     levelsGroup:insert(colNumControler)
 
     local colNumTitle = display.newText(colNumControler, "The number of columns: " .. globalData.gameSetting.colNum, display.contentCenterX, display.contentHeight * 0.70, globalData.font.default, globalData.font.size.normal)
-    colNumTitle:setFillColor(0, 0, 1)
+    colNumTitle:setFillColor(unpack(color.h2))
 
     local colNumSlider = widget.newSlider({
+        sheet = sliderSheet,
+        leftFrame = 1,
+        middleFrame = 2,
+        rightFrame = 3,
+        fillFrame = 4,
+        frameWidth = frameSize,
+        frameHeight = frameSize,
+        handleFrame = 5,
+        handleWidth = frameSize * 1.5,
+        handleHeight = frameSize * 1.5,
         x = display.contentCenterX,
         y = display.contentHeight * 0.75,
         width = display.contentWidth * 0.6,
@@ -172,24 +205,26 @@ function scene:create( event )
     })
     colNumControler:insert(colNumSlider)
 
-    display.newText(colNumControler, globalData.gameSetting.colNumMin, display.contentWidth * 0.10, colNumSlider.y, globalData.font.default, globalData.font.size.normal)
-    display.newText(colNumControler, globalData.gameSetting.colNumMax, display.contentWidth * 0.90, colNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    local x = display.newText(colNumControler, globalData.gameSetting.colNumMin, display.contentWidth * 0.10, colNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    x:setFillColor(unpack(color.title))
+    local x = display.newText(colNumControler, globalData.gameSetting.colNumMax, display.contentWidth * 0.90, colNumSlider.y, globalData.font.default, globalData.font.size.normal)
+    x:setFillColor(unpack(color.title))
 
 
 
     -- Button "Start"
     local startButton = widget.newButton({
         -- Button to resume game
-        x = display.contentCenterX,
+        x = display.contentWidth * 0.25,
         y = display.contentHeight * 0.9,
-        label = "START",
+        label = "Start",
         labelAlign = "center",
         labelColor = globalData.labelColor,
         font = globalData.font.default,
         fontSize = globalData.font.size.normal,
         shape = "rect",
         fillColor = globalData.buttonColor,
-        width = display.contentWidth * 0.9,
+        width = display.contentWidth * 0.4,
         height = display.contentHeight * 0.1,
     })
     sceneGroup:insert(startButton)
@@ -200,6 +235,28 @@ function scene:create( event )
                 return
             end
             composer.gotoScene("mainGame", globalData.fade)
+        end
+    )
+
+    -- Button "Home"
+    local homeButton = widget.newButton({
+        -- Button to resume game
+        x = display.contentWidth * 0.75,
+        y = display.contentHeight * 0.9,
+        label = "Home",
+        labelAlign = "center",
+        labelColor = globalData.labelColor,
+        font = globalData.font.default,
+        fontSize = globalData.font.size.normal,
+        shape = "rect",
+        fillColor = globalData.buttonColor,
+        width = display.contentWidth * 0.4,
+        height = display.contentHeight * 0.1,
+    })
+    sceneGroup:insert(homeButton)
+    homeButton:addEventListener("tap",
+        function (  )
+            composer.gotoScene("mainMenu", globalData.fade)
         end
     )
 end

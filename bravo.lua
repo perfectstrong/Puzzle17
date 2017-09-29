@@ -1,5 +1,6 @@
 local composer = require( "composer" )
 local globalData = require("globalData")
+local color = globalData.defaultColor
 local widget = require("widget")
 local scene = composer.newScene()
  
@@ -22,12 +23,12 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     local transparentFilm = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight)
-    transparentFilm:setFillColor(0,0,0,0.5)
+    transparentFilm:setFillColor(unpack(color.gray))
 
     local box = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth * 0.9, display.contentHeight * 0.8)
-    box:setFillColor(0,0,0,0.5)
+    box:setFillColor(unpack(color.gray))
     box.strokeWidth = 3
-    box:setStrokeColor(1, 0, 0)
+    box:setStrokeColor(unpack(color.stroke))
 
     local text = display.newText({
         parent = sceneGroup,
