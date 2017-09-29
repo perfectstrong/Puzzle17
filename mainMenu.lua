@@ -9,7 +9,7 @@ local scene = composer.newScene()
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
  
-math.randomseed(os.time())
+
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -86,7 +86,8 @@ function scene:show( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
- 
+        -- Reset the imagePath
+        globalData.gameSetting.imagePath = nil
     end
 end
  

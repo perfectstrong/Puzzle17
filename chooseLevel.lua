@@ -11,7 +11,18 @@ local scene = composer.newScene()
 -- -----------------------------------------------------------------------------------
  
 local backGroup, levelsGroup, giftsGroup
- 
+local x = 1
+
+-- For sliders
+function getPercentage( value, min, max )
+    if (value <= min) then
+        return 0
+    elseif (value >= max) then
+        return 100
+    else
+        return math.floor((value - min) / (max - min) * 100)
+    end
+end
  
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
@@ -162,7 +173,7 @@ function scene:create( event )
         y = display.contentHeight * 0.6,
         width = display.contentWidth * 0.6,
         orientation = "horizontal",
-        value = 0,
+        value = getPercentage(globalData.gameSetting.rowNum, globalData.gameSetting.rowNumMin, globalData.gameSetting.rowNumMax),
         listener = function (event)
             globalData.gameSetting.rowNum = math.floor(event.value / 100 * (globalData.gameSetting.rowNumMax - globalData.gameSetting.rowNumMin)) + globalData.gameSetting.rowNumMin
             rowNumTitle.text = "The number of rows: " .. globalData.gameSetting.rowNum
@@ -197,7 +208,7 @@ function scene:create( event )
         y = display.contentHeight * 0.75,
         width = display.contentWidth * 0.6,
         orientation = "horizontal",
-        value = 0,
+        value = getPercentage(globalData.gameSetting.colNum, globalData.gameSetting.colNumMin, globalData.gameSetting.colNumMax),
         listener = function (event)
             globalData.gameSetting.colNum = math.floor(event.value / 100 * (globalData.gameSetting.colNumMax - globalData.gameSetting.colNumMin)) + globalData.gameSetting.colNumMin
             colNumTitle.text = "The number of columns: " .. globalData.gameSetting.colNum
@@ -289,7 +300,7 @@ function scene:hide( event )
  
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
- 
+        composer.removeScene("chooseLevel")
     end
 end
  

@@ -4,6 +4,8 @@
 --
 -----------------------------------------------------------------------------------------
 
+math.randomseed(os.time())
+
 -- Initial setups
 math.randomseed(os.time())
 local composer = require("composer")
